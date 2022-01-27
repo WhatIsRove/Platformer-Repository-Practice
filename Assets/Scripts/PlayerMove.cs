@@ -17,6 +17,12 @@ public class PlayerMove : MonoBehaviour
     private Vector3 velocity = Vector3.zero;
     private Vector2 groundedCheck;
 
+    private float jumpPressedRemember = 0f;
+    [SerializeField] private float jumpPressedRememberTime = 0.2f;
+
+    private float wasGroundedRemember = 0f;
+    [SerializeField] private float wasGroundedRememberTime = 0.2f;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>(); //when it wakes / loads grabs the rigidbody2d of the object the script is attached to.
@@ -29,9 +35,23 @@ public class PlayerMove : MonoBehaviour
 
         groundedCheck = (Vector2)transform.position + new Vector2(0, -0.1f);
         bool bGrounded = Physics2D.OverlapBox(groundedCheck, transform.localScale, 0, lmGround);
-        if (bGrounded && Input.GetButtonDown("Jump"))
+
+        wasGroundedRemember -= Time.deltaTime;
+        if(bGrounded)
         {
-            bGrounded = false;
+            wasGroundedRemember = wasGroundedRememberTime;
+        }
+
+        jumpPressedRemember -= Time.deltaTime;
+        if (Input.GetButtonDown("Jump"))
+        {
+            jumpPressedRemember = jumpPressedRememberTime;
+        }
+
+        if ((wasGroundedRemember > 0) && (jumpPressedRemember > 0))
+        {
+            wasGroundedRemember = 0;
+            jumpPressedRemember = 0;
             rb.velocity = new Vector2(rb.velocity.x, jumpVelocity);
         }
     }
