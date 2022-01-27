@@ -19,11 +19,13 @@ public class PlayerMove : MonoBehaviour
     private float horizontalMove;
     private bool bFacingRight = true;
     private Rigidbody2D rb;
+    private Animator animator;
     private Vector3 velocity = Vector3.zero;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>(); //when it wakes / loads grabs the rigidbody2d of the object the script is attached to.
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -34,6 +36,8 @@ public class PlayerMove : MonoBehaviour
         Vector2 groundedCheckPosition = (Vector2)transform.position + new Vector2(0, -0.1f);
         Vector2 groundedCheckScale = (Vector2)transform.localScale + new Vector2(-0.2f, 0);
         bool bGrounded = Physics2D.OverlapBox(groundedCheckPosition, groundedCheckScale, 0, lmGround);
+
+        animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
 
         wasGroundedRemember -= Time.deltaTime;
         if(bGrounded)
