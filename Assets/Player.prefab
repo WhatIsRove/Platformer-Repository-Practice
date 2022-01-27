@@ -146,4 +146,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jumpVelocity: 25
   moveSpeed: 40
+  lmGround:
+    serializedVersion: 2
+    m_Bits: 64
   movementSmoothening: 0.1
