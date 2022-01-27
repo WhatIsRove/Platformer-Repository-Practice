@@ -15,6 +15,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float mGravityScale = 4f;
     private float wasGroundedRemember = 0f;
     [SerializeField] private float wasGroundedRememberTime = 0.2f;
+    private bool bFalling = false;
 
     private float horizontalMove;
     private bool bFacingRight = true;
@@ -58,9 +59,23 @@ public class PlayerMove : MonoBehaviour
 
         if ((wasGroundedRemember > 0) && (jumpPressedRemember > 0))
         {
+            animator.SetTrigger("Jumping");
             wasGroundedRemember = 0;
             jumpPressedRemember = 0;
             rb.velocity = new Vector2(rb.velocity.x, jumpVelocity);
+        }
+
+        if (rb.velocity.y < 0)
+        {
+            animator.SetBool("Falling", true);
+            bFalling = true;
+        }
+
+        if (rb.velocity.y == 0 && bFalling)
+        {
+            animator.SetTrigger("Landing");
+            animator.SetBool("Falling", false);
+            bFalling = false;
         }
 
         //flips direction you move to
