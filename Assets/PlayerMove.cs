@@ -8,17 +8,16 @@ public class PlayerMove : MonoBehaviour
 
     [SerializeField] public Rigidbody2D rb;
 
-    Vector2 movement;
+    float horizontalMove;
 
     // Update is called once per frame
     void Update()
     {
-        movement.x = Input.GetAxisRaw("Horizontal");
-        movement.y = Input.GetAxisRaw("Vertical");
+        horizontalMove = Input.GetAxisRaw("Horizontal");
     }
 
     void FixedUpdate()
     {
-        rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
+        transform.position += new Vector3(horizontalMove, 0, 0) * moveSpeed * Time.fixedDeltaTime;
     }
 }
