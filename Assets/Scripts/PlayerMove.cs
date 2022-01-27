@@ -15,10 +15,10 @@ public class PlayerMove : MonoBehaviour
     private Rigidbody2D rb;
 
     private Vector3 velocity = Vector3.zero;
-    private Vector2 groundedCheck;
 
     private float jumpPressedRemember = 0f;
     [SerializeField] private float jumpPressedRememberTime = 0.2f;
+    [Range(0f, 1f)][SerializeField] private float jumpCutOff = 0.5f;
 
     private float wasGroundedRemember = 0f;
     [SerializeField] private float wasGroundedRememberTime = 0.2f;
@@ -33,8 +33,9 @@ public class PlayerMove : MonoBehaviour
     {
         horizontalMove = Input.GetAxisRaw("Horizontal"); // just gets when ever A or D is pressed and returns -1 to 1, unity has preset buttons like "Fire1" or "Horizontal" / "Vertical"
 
-        groundedCheck = (Vector2)transform.position + new Vector2(0, -0.1f);
-        bool bGrounded = Physics2D.OverlapBox(groundedCheck, transform.localScale, 0, lmGround);
+        Vector2 groundedCheckPosition = (Vector2)transform.position + new Vector2(0, -0.1f);
+        Vector2 groundedCheckScale = (Vector2)transform.localScale + new Vector2(-0.2f, 0);
+        bool bGrounded = Physics2D.OverlapBox(groundedCheckPosition, groundedCheckScale, 0, lmGround);
 
         wasGroundedRemember -= Time.deltaTime;
         if(bGrounded)
@@ -43,9 +44,14 @@ public class PlayerMove : MonoBehaviour
         }
 
         jumpPressedRemember -= Time.deltaTime;
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") && !(rb.velocity.y > 0))
         {
             jumpPressedRemember = jumpPressedRememberTime;
+        }
+
+        if (Input.GetButtonUp("Jump") && rb.velocity.y > 0)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * jumpCutOff);
         }
 
         if ((wasGroundedRemember > 0) && (jumpPressedRemember > 0))
