@@ -7,21 +7,19 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float jumpVelocity = 40f;
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private LayerMask lmGround;
-
     [Range(0f, 0.3f)][SerializeField] private float movementSmoothening = 0.3f;
-
-    private float horizontalMove;
-
-    private Rigidbody2D rb;
-
-    private Vector3 velocity = Vector3.zero;
 
     private float jumpPressedRemember = 0f;
     [SerializeField] private float jumpPressedRememberTime = 0.2f;
     [Range(0f, 1f)][SerializeField] private float jumpCutOff = 0.5f;
-
+    [SerializeField] private float mGravityScale = 4f;
     private float wasGroundedRemember = 0f;
     [SerializeField] private float wasGroundedRememberTime = 0.2f;
+
+    private float horizontalMove;
+    private bool bFacingRight = true;
+    private Rigidbody2D rb;
+    private Vector3 velocity = Vector3.zero;
 
     private void Awake()
     {
@@ -44,7 +42,7 @@ public class PlayerMove : MonoBehaviour
         }
 
         jumpPressedRemember -= Time.deltaTime;
-        if (Input.GetButtonDown("Jump") && !(rb.velocity.y > 0))
+        if (Input.GetButtonDown("Jump") && rb.velocity.y <= 0)
         {
             jumpPressedRemember = jumpPressedRememberTime;
         }
@@ -60,6 +58,21 @@ public class PlayerMove : MonoBehaviour
             jumpPressedRemember = 0;
             rb.velocity = new Vector2(rb.velocity.x, jumpVelocity);
         }
+
+        //flips direction you move to
+        if (horizontalMove > 0 && !bFacingRight)
+        {
+            Flip();
+        }
+
+        if (horizontalMove < 0 && bFacingRight)
+        {
+            Flip();
+        }
+
+        //Fast fall
+        if (rb.velocity.y < 0.2f) rb.gravityScale = mGravityScale * 2f;
+        else rb.gravityScale = mGravityScale;
     }
 
     private void FixedUpdate()
@@ -69,5 +82,12 @@ public class PlayerMove : MonoBehaviour
 
         rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothening); //and then slowly smoothening it toward that target velocity from your current
 
+    }
+
+    private void Flip()
+    {
+        bFacingRight = !bFacingRight;
+
+        transform.Rotate(0f, 180f, 0f);
     }
 }
