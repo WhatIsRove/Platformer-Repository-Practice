@@ -22,15 +22,16 @@ public class PlayerMove : MonoBehaviour
     private Rigidbody2D rb;
     private Animator animator;
     private Vector3 velocity = Vector3.zero;
-    private GameObject trail;
-    private ParticleSystem ps;
+
+    private ParticleSystem trailPS;
+    private ParticleSystem impactPS;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>(); //when it wakes / loads grabs the rigidbody2d of the object the script is attached to.
         animator = GetComponent<Animator>();
-        trail = GameObject.Find("Trail");
-        ps = GameObject.Find("Trail").GetComponent<ParticleSystem>();
+        trailPS = GameObject.Find("Trail").GetComponent<ParticleSystem>();
+        impactPS = GameObject.Find("Impact").GetComponent<ParticleSystem>();
     }
 
     // Update is called once per frame
@@ -61,25 +62,32 @@ public class PlayerMove : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * jumpCutOff);
         }
 
+        //jumping
         if ((wasGroundedRemember > 0) && (jumpPressedRemember > 0))
         {
             animator.SetTrigger("Jumping");
             wasGroundedRemember = 0;
             jumpPressedRemember = 0;
             rb.velocity = new Vector2(rb.velocity.x, jumpVelocity);
+
+            Impact();
         }
 
+        //falling
         if (rb.velocity.y < 0)
         {
             animator.SetBool("Falling", true);
             bFalling = true;
         }
 
+        //landing
         if (rb.velocity.y == 0 && bFalling)
         {
             animator.SetTrigger("Landing");
             animator.SetBool("Falling", false);
             bFalling = false;
+
+            Impact();
         }
 
         //flips direction you move to
@@ -107,7 +115,7 @@ public class PlayerMove : MonoBehaviour
 
         float angle = Mathf.Atan2(rb.velocity.y, rb.velocity.x) * Mathf.Rad2Deg;
 
-        trail.transform.rotation = Quaternion.Euler(0, 0, angle + 90f);
+        trailPS.gameObject.transform.rotation = Quaternion.Euler(0, 0, angle + 90f);
     }
 
     private void Flip()
@@ -119,11 +127,18 @@ public class PlayerMove : MonoBehaviour
 
     private void TrailOn()
     {
-        ps.Play();
+        trailPS.Play();
     }
 
     private void TrailOff()
     {
-        ps.Stop();
+        trailPS.Stop();
+    }
+
+    private void Impact()
+    {
+        impactPS.gameObject.SetActive(true);
+        impactPS.Stop();
+        impactPS.Play();
     }
 }
