@@ -22,11 +22,15 @@ public class PlayerMove : MonoBehaviour
     private Rigidbody2D rb;
     private Animator animator;
     private Vector3 velocity = Vector3.zero;
+    private GameObject trail;
+    private ParticleSystem ps;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>(); //when it wakes / loads grabs the rigidbody2d of the object the script is attached to.
         animator = GetComponent<Animator>();
+        trail = GameObject.Find("Trail");
+        ps = GameObject.Find("Trail").GetComponent<ParticleSystem>();
     }
 
     // Update is called once per frame
@@ -101,6 +105,9 @@ public class PlayerMove : MonoBehaviour
 
         rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothening); //and then slowly smoothening it toward that target velocity from your current
 
+        float angle = Mathf.Atan2(rb.velocity.y, rb.velocity.x) * Mathf.Rad2Deg;
+
+        trail.transform.rotation = Quaternion.Euler(0, 0, angle + 90f);
     }
 
     private void Flip()
@@ -108,5 +115,15 @@ public class PlayerMove : MonoBehaviour
         bFacingRight = !bFacingRight;
 
         transform.Rotate(0f, 180f, 0f);
+    }
+
+    private void TrailOn()
+    {
+        ps.Play();
+    }
+
+    private void TrailOff()
+    {
+        ps.Stop();
     }
 }
