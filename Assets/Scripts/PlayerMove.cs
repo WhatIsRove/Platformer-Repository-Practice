@@ -24,6 +24,7 @@ public class PlayerMove : MonoBehaviour
     private Vector3 velocity = Vector3.zero;
 
     private ParticleSystem trailPS;
+    private ParticleSystem altTrailPS;
     private ParticleSystem impactPS;
 
 
@@ -32,6 +33,7 @@ public class PlayerMove : MonoBehaviour
         rb = GetComponent<Rigidbody2D>(); //when it wakes / loads grabs the rigidbody2d of the object the script is attached to.
         animator = GetComponent<Animator>();
         trailPS = GameObject.Find("Trail").GetComponent<ParticleSystem>();
+        altTrailPS = GameObject.Find("AltTrail").GetComponent<ParticleSystem>();
         impactPS = GameObject.Find("Impact").GetComponent<ParticleSystem>();
     }
 
@@ -129,11 +131,13 @@ public class PlayerMove : MonoBehaviour
     private void TrailOn()
     {
         trailPS.Play();
+        altTrailPS.Play();
     }
 
     private void TrailOff()
     {
         trailPS.Stop();
+        altTrailPS.Stop();
     }
 
     private void Impact()
