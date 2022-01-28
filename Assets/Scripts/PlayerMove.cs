@@ -1,9 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMove : MonoBehaviour
 {
+    [SerializeField] private float hp = 1f;
+    [SerializeField] private GameObject deathEffect;
+    [SerializeField] private GameObject respawnObject;
+
     [SerializeField] private float jumpVelocity = 40f;
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private LayerMask lmGround;
@@ -27,6 +32,11 @@ public class PlayerMove : MonoBehaviour
     private ParticleSystem altTrailPS;
     private ParticleSystem impactPS;
 
+    private bool bInvul = false;
+    [SerializeField] private float invulDuration = 1.5f;
+    [SerializeField] private float invulFlashes = 0.15f;
+
+    private bool bDead = false;
 
     private void Awake()
     {
@@ -146,4 +156,36 @@ public class PlayerMove : MonoBehaviour
         impactPS.Stop();
         impactPS.Play();
     }
+
+    private IEnumerator BecomeInvul()
+    {
+        bInvul = true;
+
+        for (float i = 0; i < invulDuration; i += invulFlashes)
+        {
+            yield return new WaitForSeconds(invulFlashes);
+        }
+
+        bInvul = false;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        hp -= damage;
+
+        if (!bDead && hp <= 0)
+        {
+            bDead = true;
+            Die();
+        }
+
+        StartCoroutine(BecomeInvul());
+    }
+
+    private void Die()
+    {
+        Instantiate(deathEffect, transform.position, Quaternion.identity);
+        Instantiate(respawnObject, transform.position, Quaternion.identity);
+        Destroy(gameObject);
+    } 
 }
