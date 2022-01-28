@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 204056527}
   - component: {fileID: 204056529}
   - component: {fileID: 204056528}
-  - component: {fileID: 154824313}
   m_Layer: 1
   m_Name: Trail
   m_TagString: Untagged
@@ -4806,19 +4805,6 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 2
---- !u!114 &154824313
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 204056526}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f09f1394fb0cf545810264c1893c89d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Prefab: {fileID: 260662022964780954, guid: 40db6cf7372b2724cb20c997ac1451fb, type: 3}
 --- !u!1 &660268925
 GameObject:
   m_ObjectHideFlags: 0
@@ -14787,7 +14773,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 2148413250526239084}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 0422746f2949a0c4c91827d96a200b00, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
