@@ -26,6 +26,7 @@ public class PlayerMove : MonoBehaviour
     private ParticleSystem trailPS;
     private ParticleSystem impactPS;
 
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>(); //when it wakes / loads grabs the rigidbody2d of the object the script is attached to.
@@ -39,7 +40,7 @@ public class PlayerMove : MonoBehaviour
     {
         horizontalMove = Input.GetAxisRaw("Horizontal"); // just gets when ever A or D is pressed and returns -1 to 1, unity has preset buttons like "Fire1" or "Horizontal" / "Vertical"
 
-        Vector2 groundedCheckPosition = (Vector2)transform.position + new Vector2(0, -0.1f);
+        Vector2 groundedCheckPosition = (Vector2)transform.position + new Vector2(0, -0.4f);
         Vector2 groundedCheckScale = (Vector2)transform.localScale + new Vector2(-0.2f, 0);
         bool bGrounded = Physics2D.OverlapBox(groundedCheckPosition, groundedCheckScale, 0, lmGround);
 
