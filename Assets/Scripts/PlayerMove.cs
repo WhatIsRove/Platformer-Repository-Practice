@@ -59,7 +59,7 @@ public class PlayerMove : MonoBehaviour
         animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
 
         wasGroundedRemember -= Time.deltaTime;
-        if(bGrounded)
+        if (bGrounded)
         {
             wasGroundedRemember = wasGroundedRememberTime;
         }
